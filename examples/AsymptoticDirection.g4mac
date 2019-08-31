@@ -1,0 +1,100 @@
+################################################################
+#MAGNETOCOSMICS Macro file for computing asymptotic directions #
+#and cutoff rigidities for  a given observing  position and    #
+#direction of incidence                                        #
+################################################################
+
+#
+#for visualisation used /tracking/storeTrajectory 1 
+#
+#
+
+/tracking/storeTrajectory 0
+/tracking/verbose 0
+/run/verbose 1
+
+#
+#For the visualisation use a smaller maximum step length
+#
+
+/MAGCOS/USERLIMIT/SetMaxStepLength .1 Re
+/MAGCOS/USERLIMIT/SetMaxTrajectoryLength 100. Re
+
+#
+#Integration parameter
+#
+
+
+/MAGCOS/INTEGRATION/SetPrecision 1e-6 
+/MAGCOS/INTEGRATION/SetG4MaxStep 1e-1 re
+/MAGCOS/INTEGRATION/SetBSMaxStep 1. re
+/MAGCOS/INTEGRATION/SetDeltaIntersection 1e-2 re
+
+#
+#Set the magnetic field model to IGRF without external field 
+#The field is computed on the 12th december 1989 at 10 hour .
+#
+/MAGCOS/BFIELD/SetStartDate 1989 1 1 10 0 0
+/MAGCOS/BFIELD/SetGeomagneticFieldModel IGRF
+/MAGCOS/BFIELD/SetExternalFieldModel NOFIELD
+
+
+#
+#Definition of particle type, observing position and incident direction  
+#
+
+/gps/particle proton
+/MAGCOS/SOURCE/SetPosition GEOID 20. km  0. 240. degree
+/MAGCOS/SOURCE/SetDirection GEOID 0. 0. degree
+
+#
+#Definition of the diffrent rigiditise for which particle trajectory will
+#computed
+#
+
+
+/MAGCOS/RIGIDITYVECTOR/Reset
+/MAGCOS/RIGIDITYVECTOR/AddValues 20. -0.02 999
+
+
+#
+#For visualisation uncomment the following lines
+#
+#/tracking/storeTrajectory 1
+#/MAGCOS/DRAW/DrawTrajectory true
+#/MAGCOS/DRAW/DrawPoints false
+#/MAGCOS/DRAW/SetColour 1 0 0
+#/MAGCOS/DRAW/SetCoordinateSystem GEO
+
+
+#
+#Compute the asymptotic direction and cutoff rigidities and store the results
+#in the file BSAsymptoticDirection.out. For this computation, trajectories are 
+#integrated with the BulirshStoer method
+#
+
+/MAGCOS/INTEGRATION/SelectBulirshStoerMethod
+/MAGCOS/SCENARIO/ComputeAsymptoticDirections BSAsymptoticDirection.out
+
+
+#
+#Recompute the same as before by using the integration algorithm 
+#used in G4. Results are stored in G4AsymptoticDirection.out
+#
+
+
+/MAGCOS/INTEGRATION/SelectG4IntegrationMethod
+/MAGCOS/SCENARIO/ComputeAsymptoticDirections G4AsymptoticDirection.out
+
+
+#
+#For visualisatiom of the trajectories uncomment and modify the following lines
+#
+#/vis/scene/create
+#/vis/open VRML2FILE
+#/MAGCOS/DRAW/Show
+#/MAGCOS/DRAW/Reset
+#/vis/viewer/flush
+
+
+

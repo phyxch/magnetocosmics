@@ -1,0 +1,6 @@
+9/11/2014: Hexc
+
+I had to append "_" to the fortran routine names in order to make the code
+to be compatable with the Geant4.10.00-p02 on Ubunto and my MacPro laptop.
+
+

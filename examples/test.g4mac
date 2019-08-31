@@ -1,0 +1,141 @@
+
+################################################################
+#MAGNETOCOSMICS Macro file for visualising magnetic feild lines#
+################################################################
+
+#
+#/tracking/storeTrajectory should be set to 1 otherwise no visualisation is
+#possible
+#
+
+/tracking/verbose 0
+/control/verbose 1
+/tracking/storeTrajectory 1
+
+
+#
+#Integration parameters definition
+#
+
+/MAGCOS/USERLIMIT/SetMaxStepLength .5 re
+/MAGCOS/INTEGRATION/SelectG4IntegrationMethod
+/MAGCOS/INTEGRATION/SetPrecision 1e-5 re
+/MAGCOS/INTEGRATION/SetG4MaxStep 5e-2 re
+/MAGCOS/INTEGRATION/SetDeltaIntersection 5e-3 re
+
+#
+#Magnetic field model definition
+#
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel DIPOLE
+/MAGCOS/BFIELD/SetNonshiftedGeodipoleFromIGRF
+/MAGCOS/BFIELD/SetExternalFieldModel TSY89
+#/MAGCOS/BFIELD/SetW1 1
+#/MAGCOS/BFIELD/SetW2 1
+#/MAGCOS/BFIELD/SetW3 1
+#/MAGCOS/BFIELD/SetW4 1
+#/MAGCOS/BFIELD/SetW5 1
+#/MAGCOS/BFIELD/SetW6 1
+#
+#Drawing parameters for the first serie of field lines in the morning side
+#These lines will be visualised in red lines and  with points of size 4
+#Coordinate system for visualisation is GSM
+#Caution visualisation take place at the end with command /MAGCOS/DRAW/Draw
+#
+
+/MAGCOS/DRAW/DrawTrajectory true
+/MAGCOS/DRAW/DrawPoints true
+/MAGCOS/DRAW/SetPointSize 4
+/MAGCOS/DRAW/SetColour 1 0 0
+/MAGCOS/DRAW/SetCoordinateSystem GSM
+/MAGCOS/DRAW/RegisterTrajectory true
+
+
+#
+#Trace the morning side field lines
+#
+
+/MAGCOS/SOURCE/SetPositionVector SM  3. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM 4. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  5. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  6. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  9.5 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  12. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+
+#
+#Change visualisation parameter for the night side field lines
+#Line are drawn in green, no points are plotted
+#
+/MAGCOS/DRAW/DrawPoints false
+/MAGCOS/DRAW/SetColour 0 1 0
+
+#
+#Trace night side field lines
+#
+
+/MAGCOS/SOURCE/SetPositionVector SM  -3. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM -4. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  -5. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  -6. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector SM  -10. 0.  0. re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector GSM  -14. 0.  -3.5 re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector GSM  -14. 0.  -4.5 re 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPositionVector GSM  -14. 0.  -2.5 re 
+/MAGCOS/SCENARIO/TraceBline
+
+
+
+/MAGCOS/SOURCE/SetPosition SM  50. km  -75.  180. degree 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPosition SM  50. km  75.  180. degree 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPosition SM  50. km  -85.  180. degree 
+/MAGCOS/SCENARIO/TraceBline
+/MAGCOS/SOURCE/SetPosition SM  50. km  85.  180. degree 
+/MAGCOS/SCENARIO/TraceBline
+
+
+#
+#Execution of the visualisation.
+#You can change VRML2FILE by your selected visualisation driver 
+#
+#Test have been done for DAWNFILE, and VRML2FILE
+#For OGLIX the line /vis/flush should probably  be removed
+#For OGLIX and OGLSX if you want to have time to see something please work in
+#interactive mode. 
+
+/vis/scene/create
+/vis/open VRML2FILE
+/MAGCOS/DRAW/Show
+/MAGCOS/DRAW/Reset
+/vis/viewer/flush
+
+/vis/viewer/create 
+
+
+/MAGCOS/DRAW/SaveTrajectories trajectory.csv
+#
+#the field lines  stored for visualisation are removed 
+#
+/MAGCOS/DRAW/Reset
+
+
+
+
+
+
+
+

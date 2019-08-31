@@ -1,0 +1,87 @@
+
+#################################################################
+#MAGNETOCOSMICS Macro file for visualising the motion of        #
+#a 10 MeV proton on a geomagnetic shell 			#
+#################################################################
+
+#
+#/tracking/storeTrajectory should be set to 1 otherwise nothing is
+# visualised 
+#
+
+/tracking/verbose 0
+/tracking/storeTrajectory 1
+
+#
+#
+#Particle source definition
+#
+/gps/particle proton
+/gps/energy 10 MeV
+/MAGCOS/SOURCE/SetPositionVector GSM  3. 0. 0. re  
+/MAGCOS/SOURCE/SetDirectionVector GSM 0. 1. 0. 
+
+#
+#Integration parameter definition
+#
+
+/MAGCOS/INTEGRATION/SelectG4IntegrationMethod
+/MAGCOS/INTEGRATION/SetPrecision 1e-5 re
+/MAGCOS/INTEGRATION/SetG4MaxStep 5e-2 re
+/MAGCOS/INTEGRATION/SetDeltaIntersection 5e-3 re
+
+#
+#Magnetic field model definition
+#
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel IGRF
+/MAGCOS/BFIELD/SetExternalFieldModel TSY89
+
+#
+#Visualisation parameter
+#Trajectory line is plotted
+#No points are plotted
+#Colour : green
+#Reference system :GSM
+#
+
+/MAGCOS/DRAW/DrawTrajectory true
+/MAGCOS/DRAW/DrawPoints false
+/MAGCOS/DRAW/SetColour 0 1 0
+/MAGCOS/DRAW/SetCoordinateSystem GSM
+
+#
+#User limit
+#Small max step length to see a continuous trajectory line
+#The trajectory time is limited 50 sec
+#by using 100 sec you will clode the shell
+#No limitation on trajectory length
+#
+/MAGCOS/USERLIMIT/SetMaxStepLength .05 re
+/MAGCOS/USERLIMIT/SetMaxTrajectoryTime 50. s
+/MAGCOS/USERLIMIT/SetMaxTrajectoryLength 90000000. re
+
+#
+#Compute the trajectory
+#
+/MAGCOS/SCENARIO/TraceParticleTrajectory
+
+#
+#Execution of the visualisation.
+#You can change VRML2FILE by your selected visualisation driver 
+#
+#Test have been done for DAWNFILE, and VRML2FILE
+#For OGLIX the line /vis/flush should probably  be removed
+#For OGLIX and OGLSX if you want to have time to see something please work in
+#interactive mode. 
+
+/vis/scene/create
+#/vis/open VRML2FILE
+#/vis/open OGLIX
+/vis/open DAWNFILE
+/MAGCOS/DRAW/Show
+
+#
+#the field lines  stored for visualisation are removed 
+#
+#/MAGCOS/DRAW/Reset

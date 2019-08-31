@@ -1,0 +1,132 @@
+
+#################################################################
+#MAGNETOCOSMICS Macro file for visualising cosmic ray trajectory#
+#Bacward trajectories of 5 GV proton incident vertically at the #
+#top of the  atmosphere above the  Jungfraujoch Station         #
+#Four diffrent magnetic feild models are consiedered		#
+#################################################################
+
+#
+#/tracking/storeTrajectory should be set to 1 otherwise no visualisation is
+#possible
+#
+
+
+/tracking/verbose 0
+/tracking/storeTrajectory 1
+/vis/scene/endOfEventAction accumulate
+
+
+#
+#Integration parameters definition
+#
+
+
+/MAGCOS/INTEGRATION/SelectG4IntegrationMethod
+/MAGCOS/INTEGRATION/SetPrecision 1e-5 re
+/MAGCOS/INTEGRATION/SetG4MaxStep 5e-2 re
+/MAGCOS/INTEGRATION/SetDeltaIntersection 5e-3 re
+
+
+#
+#Define the particle position, direction of incidence and rigidity 
+#
+
+
+/gps/particle proton
+/MAGCOS/SOURCE/SetRigidity  5. GV
+/MAGCOS/SOURCE/SetPosition GEOID  20. km  46.55  7.98 degree
+/MAGCOS/SOURCE/SetDirection GEOID 0. 0. degree 
+
+
+
+
+
+##############################################
+# First trajectory                           #
+# magnetic field = Shifted  DIPOLE	     # 
+# Visualisation colour :green                 #               #
+##############################################
+
+#
+#Magnetic field model definition for first trajectory
+#
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel DIPOLE
+/MAGCOS/BFIELD/SetShiftedGeodipoleFromIGRF
+/MAGCOS/BFIELD/SetExternalFieldModel NOFIELD
+
+#
+#Visualisation parameter for first trajectory
+#By using a small MaxStepLength and by plotting trajectory points with circle 
+#of size 3 the trajectory is seen as a bold line
+#Colour of the line is gree
+#
+/MAGCOS/USERLIMIT/SetMaxStepLength .05 re
+/MAGCOS/DRAW/DrawTrajectory true
+/MAGCOS/DRAW/DrawPoints false
+/MAGCOS/DRAW/SetPointSize 3
+/MAGCOS/DRAW/SetColour 0 1 0
+/MAGCOS/DRAW/SetCoordinateSystem GSM
+/MAGCOS/DRAW/RegisterTrajectory true
+
+#Trace the trajectory
+
+/MAGCOS/SCENARIO/ReverseParticleTrajectory
+
+
+
+##############################################
+# Second trajectory                          #
+# magnetic field = Shifted  DIPOLE+ TSY89 # 
+# Visualisation colour : blue                #
+##############################################
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel DIPOLE
+/MAGCOS/BFIELD/SetShiftedGeodipoleFromIGRF
+/MAGCOS/BFIELD/SetExternalFieldModel TSY89
+/MAGCOS/DRAW/SetColour 0 0 1
+/MAGCOS/SCENARIO/ReverseParticleTrajectory
+
+
+##############################################
+# Third trajectory                           #
+# magnetic field = IGRF			     # 
+# Visualisation colour : red                 #
+##############################################
+
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel IGRF
+/MAGCOS/BFIELD/SetShiftedGeodipoleFromIGRF
+/MAGCOS/BFIELD/SetExternalFieldModel NOFIELD
+/MAGCOS/DRAW/SetColour 1 0 0
+/MAGCOS/SCENARIO/ReverseParticleTrajectory
+
+##############################################
+# Fourth trajectory                          #
+# magnetic field = IGRF + TSY89		     # 
+# Visualisation colour : yellow              #
+##############################################
+
+/MAGCOS/BFIELD/SetGeomagneticFieldModel IGRF
+/MAGCOS/BFIELD/SetShiftedGeodipoleFromIGRF
+/MAGCOS/BFIELD/SetExternalFieldModel TSY89
+/MAGCOS/DRAW/SetColour 1 1 0
+/MAGCOS/SCENARIO/ReverseParticleTrajectory
+
+
+#
+#Execution of the visualisation.
+#You can change VRML2FILE by your selected visualisation driver 
+#
+#Test have been done for DAWNFILE, and VRML2FILE
+#For OGLIX the line /vis/flush should probably  be removed
+#For OGLIX and OGLSX if you want to have time to see something please work in
+#interactive mode. 
+
+/vis/scene/create
+/vis/open VRML2FILE
+/MAGCOS/DRAW/Show
+/MAGCOS/DRAW/Reset
+
+

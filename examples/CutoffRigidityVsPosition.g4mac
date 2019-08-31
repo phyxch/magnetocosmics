@@ -1,0 +1,70 @@
+################################################################
+#MAGNETOCOSMICS Macro file for computing                       #
+#cutoff rigidities for  a given direction of incidence in      #
+#function of position	                                       #
+#No visualisation is possible for such type of application     #			       #
+################################################################
+
+
+#
+#It is important to set storeTrajectory to 0 otherwise trajectories are stored 
+#and it can lead to core dump
+
+/tracking/storeTrajectory 0
+/tracking/verbose 0
+/run/verbose 0
+
+
+#
+#Define particle type
+#
+/gps/particle proton
+
+
+#
+#Define integration parameters and user limit
+#
+
+/MAGCOS/USERLIMIT/SetMaxStepLength 5. Re
+/MAGCOS/USERLIMIT/SetMaxTrajectoryLength 100. Re
+/MAGCOS/INTEGRATION/SelectG4IntegrationMethod
+/MAGCOS/INTEGRATION/SetPrecision 1e-5 re
+/MAGCOS/INTEGRATION/SetG4MaxStep 1e-1 re
+/MAGCOS/INTEGRATION/SetDeltaIntersection 1e-2 re
+
+
+#
+#Magnetic feild model IGRF for 12th decembre 1989
+#
+/MAGCOS/BFIELD/SetStartDate 1989 12 12 10 0 0
+/MAGCOS/BFIELD/SetGeomagneticFieldModel IGRF
+
+
+
+/MAGCOS/SCENARIO/AutomaticDetectionOfPenumbra true
+#
+#Define rigidity vector only needed if the automatic detection of the penumbra
+# is not considered (/MAGCOS/SCENARIO/AutomaticDetectionOfPenumbra false)
+#
+
+#/MAGCOS/RIGIDITYVECTOR/Reset 
+#/MAGCOS/RIGIDITYVECTOR/AddValues 20 -1. 15
+#/MAGCOS/RIGIDITYVECTOR/AddValues 5 -.01 450 
+
+/tracking/verbose 0
+
+#
+#Compute rigidity cutoff vs position at the same altitude and for the same 
+#direction of incidence
+#Direction and position are defined in GEOID system
+#Positions are at 20 km  and are function of latitude and longitude
+#6 diffrent latitudes and 4 different longitudes are considered all together
+# 24 positions are considered
+#The incident direction is defined by 0 degree zenith angle and 0 degree
+#azimuth
+#The results are stored in the file CutoffVsPosition.out
+#
+
+/MAGCOS/SCENARIO/RCutoffVsPosition  GEOID 20 km -75. 15. 6 0. 90. 4 0. 0. degree CutoffVsPosition.out
+
+

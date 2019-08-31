@@ -1,0 +1,140 @@
+
+
+
+
+//  Obtain the final space-point and velocity (normal) at the end of the Step
+//
+inline
+G4ThreeVector  MYPropagatorInField::EndPosition() const
+{
+      return   End_PointAndTangent.GetPosition(); 
+}
+
+inline
+G4ThreeVector  MYPropagatorInField::EndMomentumDir() const
+{
+      return   End_PointAndTangent.GetMomentumDir(); 
+}
+
+
+
+inline
+G4bool   MYPropagatorInField::IsParticleLooping() const
+{
+      return fParticleIsLooping;
+}
+
+inline
+G4int    MYPropagatorInField::GetMaxLoopCount() const
+{
+      return fmax_loop_count;
+}
+
+inline
+void     MYPropagatorInField::SetMaxLoopCount(G4int new_max) 
+{
+      fmax_loop_count= new_max;
+}
+
+inline
+G4double MYPropagatorInField::GetDeltaIntersection() const
+{
+      return fCurrentFieldMgr->GetDeltaIntersection();
+} 
+
+inline
+G4double MYPropagatorInField::GetDeltaOneStep() const
+{
+      return fCurrentFieldMgr->GetDeltaOneStep();
+}
+
+inline
+void
+MYPropagatorInField::SetAccuraciesWithDeltaOneStep(G4double valDeltaOneStep)
+{ 
+   fDetectorFieldMgr->SetAccuraciesWithDeltaOneStep(valDeltaOneStep);
+   //  this->SetDeltaOneStep(valDeltaOneStep);
+   // this->SetDeltaIntersection( 0.4 * fDelta_One_Step_Value);
+}
+
+inline
+void MYPropagatorInField::SetDeltaOneStep(G4double valDeltaOneStep)
+{ 
+   fDetectorFieldMgr->SetDeltaOneStep( valDeltaOneStep); 
+   // fCurrentFieldMgr->SetDeltaOneStep( valDeltaOneStep);  
+}
+
+inline
+void MYPropagatorInField::SetDeltaIntersection(G4double valDeltaIntersection)
+{
+  fDetectorFieldMgr->SetDeltaIntersection(valDeltaIntersection);
+   // fCurrentFieldMgr->SetDeltaOneStep( valDeltaOneStep); 
+}
+
+inline
+G4int MYPropagatorInField::SetVerboseLevel( G4int Verbose )
+{
+  return fVerboseLevel=Verbose;
+}
+
+inline
+G4int MYPropagatorInField::Verbose() const
+{
+  return fVerboseLevel;
+}
+
+inline
+G4FieldTrack MYPropagatorInField::GetEndState() const
+{
+  return End_PointAndTangent;
+}
+
+// Minimum for Relative accuracy of any Step 
+inline 
+G4double  MYPropagatorInField::GetMinimumEpsilonStep() const
+{
+  return fEpsilonMin; 
+}
+
+inline 
+void      MYPropagatorInField::SetMinimumEpsilonStep(G4double newEpsMin)
+{
+  if( (newEpsMin > 0.0) && (fabs(1.0+newEpsMin)>1.0) )
+    fEpsilonMin= newEpsMin;
+}
+
+inline void      MYPropagatorInField::SetLargestAcceptableStep(G4double newBigDist)
+{if(fLargestAcceptableStep>0.0) fLargestAcceptableStep= newBigDist; }
+
+inline G4double  MYPropagatorInField::GetLargestAcceptableStep()
+{return fLargestAcceptableStep;}
+
+inline G4FieldManager*  MYPropagatorInField::GetCurrentFieldManager()
+{ return fCurrentFieldMgr; } 
+
+inline void MYPropagatorInField::SetThresholdNoZeroStep( G4int noAct, G4int noHarsh, G4int noAbandon)
+{
+  if(noAct>0) 
+    fActionThreshold_NoZeroSteps= noAct; 
+
+  if( noHarsh > fActionThreshold_NoZeroSteps)
+    fSevereActionThreshold_NoZeroSteps= noHarsh; 
+  else
+    fSevereActionThreshold_NoZeroSteps= 2*(fActionThreshold_NoZeroSteps+1);
+
+  if( noAbandon > fSevereActionThreshold_NoZeroSteps+5)
+    fAbandonThreshold_NoZeroSteps= noAbandon; 
+  else
+    fAbandonThreshold_NoZeroSteps= 2*(fSevereActionThreshold_NoZeroSteps+3); 
+}
+
+inline G4int MYPropagatorInField::GetThresholdNoZeroSteps(G4int i)
+{
+   G4int t=0;
+   if( i==0 )     { t = 3; }     // No of parameters
+   else if (i==1) { t = fActionThreshold_NoZeroSteps; }
+   else if (i==2) { t = fSevereActionThreshold_NoZeroSteps; }
+   else if (i==3) { t = fAbandonThreshold_NoZeroSteps; }
+
+   return t;
+}                     

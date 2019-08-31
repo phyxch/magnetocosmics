@@ -1,0 +1,18 @@
+
+18/09/2006 Desorgher Laurent
+-Migration to Geant4.8.1 
+
+
+
+01/01/2006 Desorgher Laurent
+-Start History file
+-Installation scripts (see README)
+-Correction to remove a bug in  the algorithm used for the  automatic detection of the penumbra
+-Slight modifications to be complinat with Geant4.8.0 release
+
+
+
+
+03/07/2003 Desorgher Laurent
+-First release
+
